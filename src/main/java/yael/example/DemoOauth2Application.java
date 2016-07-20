@@ -101,11 +101,11 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 			extends ResourceServerConfigurerAdapter {
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
-			// @formatter:off
+			
 			http
 				.antMatcher("/me")
 				.authorizeRequests().anyRequest().authenticated();
-			// @formatter:on
+	
 		}
 	}
 
