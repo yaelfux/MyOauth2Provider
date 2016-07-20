@@ -152,7 +152,27 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		facebookFilter.setTokenServices(new UserInfoTokenServices(
 				client.getResource().getUserInfoUri(), client.getClient().getClientId()));
 		return facebookFilter;
+		
+		OAuth2ClientAuthenticationProcessingFilter githubFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/github");
+  OAuth2RestTemplate githubTemplate = new OAuth2RestTemplate(github(), oauth2ClientContext);
+  githubFilter.setRestTemplate(githubTemplate);
+  githubFilter.setTokenServices(new UserInfoTokenServices(githubResource().getUserInfoUri(), github().getClientId()));
+  filters.add(githubFilter);
+
+  filter.setFilters(filters);
+  return filter;
 	}
+	@Bean
+@ConfigurationProperties("github.client")
+OAuth2ProtectedResourceDetails github() {
+	return new AuthorizationCodeResourceDetails();
+}
+
+@Bean
+@ConfigurationProperties("github.resource")
+ResourceServerProperties githubResource() {
+	return new ResourceServerProperties();
+}
 
 	private Filter csrfHeaderFilter() {
 		return new OncePerRequestFilter() {
